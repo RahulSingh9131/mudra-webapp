@@ -1,0 +1,4 @@
+{
+  "*.{ts,tsx}": "pnpm lint",
+  "*.{ts,tsx,css,md}": "pnpm format"
+}

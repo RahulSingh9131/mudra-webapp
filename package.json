@@ -10,8 +10,12 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "dev": "next dev --turbo",
-    "lint": "next lint",
     "start": "next start",
+    "lint:fix": "eslint --ext .ts,.tsx src --fix",
+    "lint": "eslint --ext .ts,.tsx src",
+    "format": "prettier . --check",
+    "format:fix": "prettier --write .",
+    "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },
   "dependencies": {
@@ -59,9 +63,5 @@
   "ct3aMetadata": {
     "initVersion": "7.35.0"
   },
-  "packageManager": "pnpm@9.4.0",
-  "lint-staged": {
-    "*.{js,ts,jsx,tsx}": "eslint  --fix",
-    "*.{js,ts,jsx,tsx,css,md}": "prettier --write"
-  }
+  "packageManager": "pnpm@9.4.0"
 }

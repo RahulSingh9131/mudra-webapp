@@ -1,4 +1,9 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+# print a message
+echo "Running pre-commit hook 🚀"
+echo "Compiling the code 📦🔨"
+pnpm typecheck
+echo "Formatting and linting the code 👷🏼‍♂️🛠️"
 pnpm lint-staged
