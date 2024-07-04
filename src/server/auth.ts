@@ -52,6 +52,10 @@ export const authOptions: NextAuthOptions = {
     accountsTable: accounts,
     sessionsTable: sessions,
   }) as Adapter,
+  pages: {
+    signIn: '/signin',
+    newUser: '/home',
+  },
   providers: [
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
