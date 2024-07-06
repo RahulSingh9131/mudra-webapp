@@ -4,7 +4,7 @@
 
 ### Prerequisites
 
-List any prerequisites or dependencies that need to be installed before installing your project. For example:
+Requirements for this project
 
 - Node.js >= v14
 - pnpm
