@@ -16,9 +16,9 @@ const SignInButtons = () => {
         }}
       />
       <GoogleLoginButton
-      // onClick={async () => {
-      //   await signIn('google', { callbackUrl: '/home' });
-      // }}
+      onClick={async () => {
+        await signIn('google', { callbackUrl: '/home' });
+      }}
       />
       <GithubLoginButton
       // onClick={async () => {
