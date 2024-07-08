@@ -1,5 +1,6 @@
 import { getServerAuthSession } from '@/server/auth';
 import { redirect } from 'next/navigation';
+import LogoutButton from './_client';
 
 export default async function Home() {
   const session = await getServerAuthSession();
@@ -7,5 +8,10 @@ export default async function Home() {
     redirect('/signin');
   }
 
-  return <div>I am authenticated</div>;
+  return (
+    <div className="">
+      <h1>I am authenticated</h1>
+      <LogoutButton />
+    </div>
+  );
 }
