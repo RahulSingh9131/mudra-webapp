@@ -7,6 +7,7 @@ import {
 import { type Adapter } from 'next-auth/adapters';
 import DiscordProvider from 'next-auth/providers/discord';
 import GoogleProvider from 'next-auth/providers/google';
+import GithubProvider from 'next-auth/providers/github';
 
 import { env } from '@/env';
 import { db } from '@/server/db';
@@ -73,6 +74,12 @@ export const authOptions: NextAuthOptions = {
         },
       },
     }),
+    GithubProvider({
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
+    }),
+
     /**
      * ...add more providers here.
      *
