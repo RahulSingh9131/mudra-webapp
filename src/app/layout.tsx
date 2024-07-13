@@ -4,6 +4,7 @@ import { GeistSans } from 'geist/font/sans';
 
 import { TRPCReactProvider } from '@/trpc/react';
 import { siteConfig } from '@/config/site';
+import { ThemeProvider } from './_context/ThemeContext';
 
 export const metadata = {
   title: siteConfig.name,
@@ -19,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <ThemeProvider>
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -19,7 +19,7 @@ const renderArourabackground = () => {
         }}
         className="relative flex flex-col items-center justify-center gap-4 px-8"
       >
-        <h1 className="mb-6 text-3xl font-bold leading-tight md:text-5xl">
+        <h1 className="mb-6 text-3xl font-bold leading-tight text-foreground md:text-5xl">
           Record your daily expenses effortlessly. Categorize your spending to
           see where your money goes.
         </h1>
@@ -46,9 +46,7 @@ export default function Home() {
       </div>
       <div className="flex flex-1">
         <div className="flex w-6/12 flex-col justify-center space-y-6 px-10 py-10 md:px-10 md:py-10">
-          <TypewriterEffectSmooth
-            words={words}
-          />
+          <TypewriterEffectSmooth words={words} />
           <p className="text-base leading-relaxed md:text-lg">
             Welcome to Mudra, your ultimate companion for managing expenses
             effortlessly. Track your spending, set budgets, and achieve your
