@@ -31,16 +31,7 @@ const renderArourabackground = () => {
 export default function Home() {
   const words = [
     {
-      text: 'Take',
-    },
-    {
-      text: 'Control',
-    },
-    {
-      text: 'of',
-    },
-    {
-      text: 'Your',
+      text: 'Take Contorl of Your',
     },
     {
       text: 'Finances With Mudra.',
