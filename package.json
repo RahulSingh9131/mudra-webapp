@@ -16,7 +16,7 @@
     "format": "prettier . --check",
     "format:fix": "prettier --write .",
     "typecheck": "tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.1.0",
