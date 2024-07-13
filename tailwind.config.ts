@@ -1,5 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type Config } from 'tailwindcss';
 import { fontFamily } from 'tailwindcss/defaultTheme';
+
+const {
+  default: flattenColorPalette,
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+} = require('tailwindcss/lib/util/flattenColorPalette');
 
 export default {
   darkMode: ['class'],
@@ -71,12 +77,37 @@ export default {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        aurora: {
+          from: {
+            backgroundPosition: '50% 50%, 50% 50%',
+          },
+          to: {
+            backgroundPosition: '350% 50%, 350% 50%',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        aurora: 'aurora 60s linear infinite',
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwindcss-animate'), addVariablesForColors],
 } satisfies Config;
+
+// This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function addVariablesForColors({ addBase, theme }: any) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const allColors = flattenColorPalette(theme('colors'));
+  const newVars = Object.fromEntries(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  addBase({
+    ':root': newVars,
+  });
+}

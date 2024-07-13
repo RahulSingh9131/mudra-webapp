@@ -9,9 +9,13 @@ export default async function Home() {
   }
 
   return (
-    <div className="">
-      <h1>I am authenticated</h1>
-      <LogoutButton />
+    <div className="h-screen bg-green-500 py-5 pl-28 pr-5">
+      <main className="h-full w-full rounded-3xl bg-primary-foreground">
+        <div className="p-5">
+          <h1 className="text-2xl font-bold">I am authenticated</h1>
+          <LogoutButton />
+        </div>
+      </main>
     </div>
   );
 }
