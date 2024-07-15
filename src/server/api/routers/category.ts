@@ -20,6 +20,8 @@ export const categoryRouter = createTRPCRouter({
   // Get all categories
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.db.query.categories.findMany({
+      where: (categories, { eq }) =>
+        eq(categories.createdById, ctx.session.user.id),
       orderBy: (categories, { desc }) => [desc(categories.createdAt)],
     });
   }),
@@ -29,7 +31,11 @@ export const categoryRouter = createTRPCRouter({
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
       return await ctx.db.query.categories.findFirst({
-        where: (categories, { eq }) => eq(categories.id, input.id),
+        where: (categories, { and, eq }) =>
+          and(
+            eq(categories.id, input.id),
+            eq(categories.createdById, ctx.session.user.id)
+          ),
       });
     }),
 
