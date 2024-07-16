@@ -1,5 +1,6 @@
 import { relations, sql } from 'drizzle-orm';
 import {
+  decimal,
   index,
   integer,
   pgTableCreator,
@@ -19,6 +20,7 @@ import { type AdapterAccount } from 'next-auth/adapters';
  */
 export const createTable = pgTableCreator((name) => `mudra_${name}`);
 
+// posts table
 export const posts = createTable(
   'post',
   {
@@ -38,6 +40,65 @@ export const posts = createTable(
   })
 );
 
+// categories table
+export const categories = createTable(
+  'category',
+  {
+    id: serial('id').primaryKey(),
+    name: varchar('name', { length: 100 }).notNull(),
+    createdById: varchar('createdById', { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (category) => ({
+    nameIdx: index('category_name_idx').on(category.name),
+    createdByIdIdx: index('category_createdById_idx').on(category.createdById),
+  })
+);
+
+export const categoriesRelations = relations(categories, ({ one }) => ({
+  user: one(users, {
+    fields: [categories.createdById],
+    references: [users.id],
+  }),
+}));
+
+// income table
+export const incomes = createTable(
+  'income',
+  {
+    id: serial('id').primaryKey(),
+    userId: varchar('userId', { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+    categoryId: integer('categoryId')
+      .notNull()
+      .references(() => categories.id),
+    description: text('description'),
+    date: timestamp('date', { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (income) => ({
+    userIdIdx: index('income_userId_idx').on(income.userId),
+    categoryIdIdx: index('income_categoryId_idx').on(income.categoryId),
+    dateIdx: index('income_date_idx').on(income.date),
+  })
+);
+
+export const incomesRelations = relations(incomes, ({ one }) => ({
+  user: one(users, { fields: [incomes.userId], references: [users.id] }),
+  category: one(categories, {
+    fields: [incomes.categoryId],
+    references: [categories.id],
+  }),
+}));
+
+// users table
 export const users = createTable('user', {
   id: varchar('id', { length: 255 })
     .notNull()
@@ -56,6 +117,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
 }));
 
+// account table
 export const accounts = createTable(
   'account',
   {
@@ -87,6 +149,7 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
+// session table
 export const sessions = createTable(
   'session',
   {
