@@ -82,6 +82,9 @@ export const incomes = createTable(
     date: timestamp('date', { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (income) => ({
     userIdIdx: index('income_userId_idx').on(income.userId),
