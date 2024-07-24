@@ -13,6 +13,7 @@ export const incomeRouter = createTRPCRouter({
       z.object({
         amount: z.number(),
         categoryId: z.number().optional(),
+        description: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -20,6 +21,7 @@ export const incomeRouter = createTRPCRouter({
         amount: input.amount.toString(),
         userId: ctx.session.user.id,
         categoryId: input.categoryId ?? 0,
+        description: input.description ?? '',
       });
     }),
 
