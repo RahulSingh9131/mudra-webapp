@@ -4,6 +4,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
+import { Button } from '@/components/ui/button';
+
 import { getServerAuthSession } from '@/server/auth';
 import ThemeButton from './theme-button';
 import LogoutButton from '../(dashboard)/home/_client';
@@ -40,11 +42,12 @@ const Header = async () => {
             )}
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="mt-4 w-full bg-primary shadow-lg"
-            align="center"
+            className="mt-4 flex w-full flex-col items-center bg-primary shadow-lg"
+            align="start"
           >
             <ThemeButton />
             <LogoutButton />
+            <Button>Go to Profile</Button>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
