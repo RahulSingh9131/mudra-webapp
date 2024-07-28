@@ -211,3 +211,36 @@ export const sessions = createTable(
 export const sessionsRelations = relations(sessions, ({ one }) => ({
   user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
+
+export const investment = createTable(
+  'investment',
+  {
+    id: serial('id').primaryKey(),
+    investedAmount: integer('investedAmount').notNull(),
+    investedBy: varchar('investedBy', { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    investedIn: varchar('investedIn', { length: 255 })
+      .notNull()
+      .references(() => categories.id),
+    investmentTime: timestamp('investmentTime', {
+      withTimezone: true,
+    })
+      .defaultNow()
+      .notNull(),
+    investmentWithdrawlTime: timestamp('investmentWithdrawlTime', {
+      withTimezone: true,
+    }).notNull(),
+  },
+  (investment) => ({
+    investmentIndex: index('investedInIndex').on(investment.investedIn),
+  })
+);
+
+export const investmentRelations = relations(investment, ({ one }) => ({
+  user: one(users, { fields: [investment.investedBy], references: [users.id] }),
+  category: one(categories, {
+    fields: [investment.investedIn],
+    references: [categories.id],
+  }),
+}));
