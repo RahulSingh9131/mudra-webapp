@@ -8,7 +8,9 @@ const ThemeButton = () => {
 
   return (
     <div>
-      <Button onClick={toggleTheme}>{theme}</Button>
+      <Button onClick={toggleTheme} className="capitalize">
+        {theme}
+      </Button>
     </div>
   );
 };
