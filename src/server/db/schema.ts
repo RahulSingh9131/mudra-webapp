@@ -102,6 +102,42 @@ export const incomesRelations = relations(incomes, ({ one }) => ({
   }),
 }));
 
+// expense table
+
+export const expenses = createTable(
+  'expense',
+  {
+    id: serial('id').primaryKey(),
+    userId: varchar('userId', { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+    categoryId: integer('categoryId')
+      .notNull()
+      .references(() => categories.id),
+    description: text('description'),
+    date: timestamp('date', { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (expense) => ({
+    userIdIdx: index('expense_userId_idx').on(expense.userId),
+    categoryIdIdx: index('expense_categoryId_idx').on(expense.categoryId),
+    dateIdx: index('expense_date_idx').on(expense.date),
+  })
+);
+
+export const expenseRelations = relations(expenses, ({ one }) => ({
+  user: one(users, { fields: [expenses.userId], references: [users.id] }),
+  category: one(categories, {
+    fields: [expenses.categoryId],
+    references: [categories.id],
+  }),
+}));
+
 // users table
 export const users = createTable('user', {
   id: varchar('id', { length: 255 })

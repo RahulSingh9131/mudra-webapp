@@ -2,12 +2,12 @@ import { z } from 'zod';
 
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 
-import { incomes } from '@/server/db/schema';
+import { expenses } from '@/server/db/schema';
 
 import { and, eq } from 'drizzle-orm';
 
-export const incomeRouter = createTRPCRouter({
-  // Create a new income
+export const expenseRouter = createTRPCRouter({
+  // Create a new expense
   create: protectedProcedure
     .input(
       z.object({
@@ -17,7 +17,7 @@ export const incomeRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(incomes).values({
+      await ctx.db.insert(expenses).values({
         amount: input.amount.toFixed(2),
         userId: ctx.session.user.id,
         categoryId: input.categoryId ?? 0,
@@ -25,28 +25,28 @@ export const incomeRouter = createTRPCRouter({
       });
     }),
 
-  // Get all incomes
+  // Get all expenses
   getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.query.incomes.findMany({
-      where: (incomes, { eq }) => eq(incomes.userId, ctx.session.user.id),
-      orderBy: (incomes, { desc }) => [desc(incomes.createdAt)],
+    return ctx.db.query.expenses.findMany({
+      where: (expenses, { eq }) => eq(expenses.userId, ctx.session.user.id),
+      orderBy: (expenses, { desc }) => [desc(expenses.createdAt)],
     });
   }),
 
-  // Get a income by ID
+  // Get an expense by ID
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.db.query.incomes.findFirst({
-        where: (incomes, { and, eq }) =>
+      return await ctx.db.query.expenses.findFirst({
+        where: (expenses, { and, eq }) =>
           and(
-            eq(incomes.id, input.id),
-            eq(incomes.userId, ctx.session.user.id)
+            eq(expenses.id, input.id),
+            eq(expenses.userId, ctx.session.user.id)
           ),
       });
     }),
 
-  // Update a income
+  // Update an expense
   update: protectedProcedure
     .input(
       z.object({
@@ -59,26 +59,32 @@ export const incomeRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       await ctx.db
-        .update(incomes)
+        .update(expenses)
         .set({
-          amount: input.amount.toFixed(),
+          amount: input.amount.toFixed(2),
           categoryId: input.categoryId,
           description: input.description,
           date: input.date,
         })
         .where(
-          and(eq(incomes.id, input.id), eq(incomes.userId, ctx.session.user.id))
+          and(
+            eq(expenses.id, input.id),
+            eq(expenses.userId, ctx.session.user.id)
+          )
         );
     }),
 
-  // Delete a income
+  // Delete an expense
   delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db
-        .delete(incomes)
+        .delete(expenses)
         .where(
-          and(eq(incomes.id, input.id), eq(incomes.userId, ctx.session.user.id))
+          and(
+            eq(expenses.id, input.id),
+            eq(expenses.userId, ctx.session.user.id)
+          )
         );
     }),
 });
