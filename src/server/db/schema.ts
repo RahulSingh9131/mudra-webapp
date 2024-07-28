@@ -3,7 +3,6 @@ import {
   decimal,
   index,
   integer,
-  numeric,
   pgTableCreator,
   primaryKey,
   serial,
@@ -213,20 +212,15 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
 
-// export const investmentType = createTable('investmentType', {
-//   investmentTypeId: serial('id').primaryKey(),
-//   investmentTypeName: varchar('investmentTypeName', { length: 250 }).notNull(),
-// });
-
 export const investment = createTable(
   'investment',
   {
     id: serial('id').primaryKey(),
-    investedAmount: numeric('investmentAmount').notNull(),
-    investedBy: integer('investedBy')
+    investedAmount: integer('investedAmount').notNull(),
+    investedBy: varchar('investedBy', { length: 255 })
       .notNull()
       .references(() => users.id),
-    investedIn: integer('investedIn')
+    investedIn: varchar('investedIn', { length: 255 })
       .notNull()
       .references(() => categories.id),
     investmentTime: timestamp('investmentTime', {

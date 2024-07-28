@@ -3,6 +3,7 @@ import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
 import { categoryRouter } from '@/server/api/routers/category';
 import { expenseRouter } from './routers/expense';
 import { incomeRouter } from './routers/income';
+import { investmentRouter } from './routers/investment';
 
 /**
  * This is the primary router for your server.
@@ -12,7 +13,7 @@ import { incomeRouter } from './routers/income';
 export const appRouter = createTRPCRouter({
   post: postRouter,
   category: categoryRouter,
-  // investment: investmentRouter,
+  investment: investmentRouter,
   income: incomeRouter,
   expense: expenseRouter,
 });
