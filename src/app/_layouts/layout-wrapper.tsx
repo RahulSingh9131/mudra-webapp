@@ -1,5 +1,7 @@
 import React from 'react';
 import { Sidebar, SidebarBody, SidebarLink } from '../_components/sidebar';
+import Header from '../_components/header';
+
 import {
   CalendarPlus,
   Goal,
@@ -37,7 +39,11 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
             link={{ label: 'Goals', href: '/goals', icon: <Goal /> }}
           />
         </SidebarBody>
-        <div className="flex-grow py-5 pl-5 pr-5">{children}</div>
+
+        <div className="flex-grow">
+          <Header />
+          <div className="flex-grow py-5 pl-5 pr-5">{children}</div>
+        </div>
       </div>
     </Sidebar>
   );

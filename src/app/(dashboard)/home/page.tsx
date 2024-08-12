@@ -1,7 +1,5 @@
 import { getServerAuthSession } from '@/server/auth';
 import { redirect } from 'next/navigation';
-import LogoutButton from './_client';
-import ThemeButton from '@/app/_components/theme-button';
 import LayoutWrapper from '@/app/_layouts/layout-wrapper';
 
 export default async function Home() {
@@ -15,10 +13,6 @@ export default async function Home() {
       <main className="h-full w-full rounded-3xl">
         <div className="p-5">
           <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-          <div className="my-3 flex space-x-3">
-            <LogoutButton />
-            <ThemeButton />
-          </div>
         </div>
       </main>
     </LayoutWrapper>
