@@ -58,12 +58,18 @@ importers:
       next-auth:
         specifier: ^4.24.7
         version: 4.24.7(next@14.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      payment:
+        specifier: ^2.4.7
+        version: 2.4.7
       postgres:
         specifier: ^3.4.4
         version: 3.4.4
       react:
         specifier: ^18.3.0
         version: 18.3.1
+      react-credit-cards-2:
+        specifier: ^1.0.2
+        version: 1.0.2(react@18.3.1)
       react-dom:
         specifier: ^18.3.0
         version: 18.3.1(react@18.3.1)
@@ -95,6 +101,9 @@ importers:
       '@types/node':
         specifier: ^20.11.20
         version: 20.14.9
+      '@types/payment':
+        specifier: ^2.1.7
+        version: 2.1.7
       '@types/react':
         specifier: ^18.2.57
         version: 18.3.3
@@ -1311,6 +1320,12 @@ packages:
         integrity: sha512-06OCtnTXtWOZBJlRApleWndH4JsRVs1pDCc8dLSQp+7PpUpX3ePdHyeNSFTeSe7FtKyQkrlPvHwJOW3SLd8Oyg==,
       }
 
+  '@types/payment@2.1.7':
+    resolution:
+      {
+        integrity: sha512-J9BCWMJ+S2PBCSVTvdE+/ziiV73Cu3Wu6WQCC6D+1AO8vphGaQUM6hOy+UaKo84md5mrMcn7P9G/TmD9Y2922A==,
+      }
+
   '@types/prop-types@15.7.12':
     resolution:
       {
@@ -1877,6 +1892,12 @@ packages:
         integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==,
       }
     engines: { node: '>=12.13' }
+
+  credit-card-type@9.1.0:
+    resolution:
+      {
+        integrity: sha512-CpNFuLxiPFxuZqhSKml3M+t0K/484pMAnfYWH14JoD7OZMnmC0Lmo+P7JX9SobqFpRoo7ifA18kOHdxJywYPEA==,
+      }
 
   cross-spawn@7.0.3:
     resolution:
@@ -3327,6 +3348,13 @@ packages:
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  luhn@2.4.1:
+    resolution:
+      {
+        integrity: sha512-p1eEWSb2RJAfv+BzrPEUqbUXV1H3ylHEAOk9yDM1L12ojD6OQQGrE29DqKLa0XYluJTIwXIOFmyzVOme3QSyww==,
+      }
+    engines: { node: '>=10' }
+
   memoizee@0.4.17:
     resolution:
       {
@@ -3726,6 +3754,12 @@ packages:
       }
     engines: { node: '>=8' }
 
+  payment@2.4.7:
+    resolution:
+      {
+        integrity: sha512-5HyD3HJ0q3XtVm/Dss4t3KGtIughkCfnyQ1WfMashVD2vvBOmuXnkswhBcknMcHW8oo4zqVnNbQSkNaqafYaGA==,
+      }
+
   picocolors@1.0.1:
     resolution:
       {
@@ -3947,11 +3981,25 @@ packages:
       }
     engines: { node: '>=6' }
 
+  qj@2.0.0:
+    resolution:
+      {
+        integrity: sha512-8466vlnAF/piI42tzMBUfhaAWn2yBNPOLSSbA2YBlEh+S8CxBXbAO1AwuDReGKYX6LlsK19wBL9cpXZGlgsXxA==,
+      }
+
   queue-microtask@1.2.3:
     resolution:
       {
         integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==,
       }
+
+  react-credit-cards-2@1.0.2:
+    resolution:
+      {
+        integrity: sha512-XvDa7x+rzdtrHIglARMhiQpuWIqMP1bSN8gajBGD93Zn4Y3DdhPKEPKafChTAOAfhMRZpFZ23DUXNQWJAIUDFA==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
   react-dom@18.3.1:
     resolution:
@@ -5322,6 +5370,8 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
+  '@types/payment@2.1.7': {}
+
   '@types/prop-types@15.7.12': {}
 
   '@types/react-dom@18.3.0':
@@ -5711,6 +5761,8 @@ snapshots:
   copy-anything@3.0.5:
     dependencies:
       is-what: 4.1.16
+
+  credit-card-type@9.1.0: {}
 
   cross-spawn@7.0.3:
     dependencies:
@@ -6759,6 +6811,8 @@ snapshots:
     dependencies:
       react: 18.3.1
 
+  luhn@2.4.1: {}
+
   memoizee@0.4.17:
     dependencies:
       d: 1.0.2
@@ -6992,6 +7046,11 @@ snapshots:
 
   path-type@4.0.0: {}
 
+  payment@2.4.7:
+    dependencies:
+      globalthis: 1.0.4
+      qj: 2.0.0
+
   picocolors@1.0.1: {}
 
   picomatch@2.3.1: {}
@@ -7074,7 +7133,16 @@ snapshots:
 
   punycode@2.3.1: {}
 
+  qj@2.0.0: {}
+
   queue-microtask@1.2.3: {}
+
+  react-credit-cards-2@1.0.2(react@18.3.1):
+    dependencies:
+      credit-card-type: 9.1.0
+      luhn: 2.4.1
+      payment: 2.4.7
+      react: 18.3.1
 
   react-dom@18.3.1(react@18.3.1):
     dependencies:
