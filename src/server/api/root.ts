@@ -4,6 +4,7 @@ import { categoryRouter } from '@/server/api/routers/category';
 import { expenseRouter } from './routers/expense';
 import { incomeRouter } from './routers/income';
 import { investmentRouter } from './routers/investment';
+import { userAccountsRouter } from './routers/useraccount';
 
 /**
  * This is the primary router for your server.
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   investment: investmentRouter,
   income: incomeRouter,
   expense: expenseRouter,
+  userAccount: userAccountsRouter,
 });
 
 // export type definition of API

@@ -13,6 +13,7 @@ export const expenseRouter = createTRPCRouter({
       z.object({
         amount: z.number(),
         categoryId: z.number().optional(),
+        accountId: z.string(),
         description: z.string().optional(),
       })
     )
@@ -20,6 +21,7 @@ export const expenseRouter = createTRPCRouter({
       await ctx.db.insert(expenses).values({
         amount: input.amount.toFixed(2),
         userId: ctx.session.user.id,
+        accountId: input.accountId,
         categoryId: input.categoryId ?? 0,
         description: input.description ?? '',
       });
@@ -30,6 +32,10 @@ export const expenseRouter = createTRPCRouter({
     return ctx.db.query.expenses.findMany({
       where: (expenses, { eq }) => eq(expenses.userId, ctx.session.user.id),
       orderBy: (expenses, { desc }) => [desc(expenses.createdAt)],
+      with: {
+        account: true,
+        category: true,
+      },
     });
   }),
 
@@ -53,6 +59,7 @@ export const expenseRouter = createTRPCRouter({
         id: z.number(),
         amount: z.number(),
         categoryId: z.number().optional(),
+        accountId: z.string().optional(),
         description: z.string().optional(),
         date: z.date().optional(),
       })
@@ -63,6 +70,7 @@ export const expenseRouter = createTRPCRouter({
         .set({
           amount: input.amount.toFixed(2),
           categoryId: input.categoryId,
+          accountId: input.accountId,
           description: input.description,
           date: input.date,
         })

@@ -75,6 +75,9 @@ export const incomes = createTable(
       .notNull()
       .references(() => users.id),
     amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+    accountId: varchar('accountId', { length: 255 })
+      .notNull()
+      .references(() => userAccounts.id),
     categoryId: integer('categoryId')
       .notNull()
       .references(() => categories.id),
@@ -88,6 +91,7 @@ export const incomes = createTable(
   },
   (income) => ({
     userIdIdx: index('income_userId_idx').on(income.userId),
+    accountIdIdx: index('income_accountId_idx').on(income.accountId),
     categoryIdIdx: index('income_categoryId_idx').on(income.categoryId),
     dateIdx: index('income_date_idx').on(income.date),
   })
@@ -95,6 +99,10 @@ export const incomes = createTable(
 
 export const incomesRelations = relations(incomes, ({ one }) => ({
   user: one(users, { fields: [incomes.userId], references: [users.id] }),
+  account: one(userAccounts, {
+    fields: [incomes.accountId],
+    references: [userAccounts.id],
+  }),
   category: one(categories, {
     fields: [incomes.categoryId],
     references: [categories.id],
@@ -110,6 +118,9 @@ export const expenses = createTable(
     userId: varchar('userId', { length: 255 })
       .notNull()
       .references(() => users.id),
+    accountId: varchar('accountId', { length: 255 })
+      .notNull()
+      .references(() => userAccounts.id),
     amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
     categoryId: integer('categoryId')
       .notNull()
@@ -124,6 +135,7 @@ export const expenses = createTable(
   },
   (expense) => ({
     userIdIdx: index('expense_userId_idx').on(expense.userId),
+    accountIdIdx: index('income_accountId_idx').on(expense.accountId),
     categoryIdIdx: index('expense_categoryId_idx').on(expense.categoryId),
     dateIdx: index('expense_date_idx').on(expense.date),
   })
@@ -131,6 +143,10 @@ export const expenses = createTable(
 
 export const expenseRelations = relations(expenses, ({ one }) => ({
   user: one(users, { fields: [expenses.userId], references: [users.id] }),
+  account: one(userAccounts, {
+    fields: [expenses.accountId],
+    references: [userAccounts.id],
+  }),
   category: one(categories, {
     fields: [expenses.categoryId],
     references: [categories.id],
@@ -155,6 +171,25 @@ export const users = createTable('user', {
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
 }));
+
+// user account table
+export const userAccounts = createTable(
+  'user_acount',
+  {
+    id: serial('id').primaryKey(),
+    userId: varchar('userId', { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    accountName: varchar('accountName', { length: 50 }).notNull(),
+    balance: decimal('balance', { precision: 10, scale: 2 }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (userAccount) => ({
+    userIdIdx: index('user_account_userId_idx').on(userAccount.userId),
+  })
+);
 
 // account table
 export const accounts = createTable(
@@ -220,6 +255,9 @@ export const investment = createTable(
     investedBy: varchar('investedBy', { length: 255 })
       .notNull()
       .references(() => users.id),
+    accountId: varchar('accountId', { length: 255 })
+      .notNull()
+      .references(() => userAccounts.id),
     investedIn: varchar('investedIn', { length: 255 })
       .notNull()
       .references(() => categories.id),
@@ -230,15 +268,20 @@ export const investment = createTable(
       .notNull(),
     investmentWithdrawlTime: timestamp('investmentWithdrawlTime', {
       withTimezone: true,
-    }).notNull(),
+    }),
   },
   (investment) => ({
     investmentIndex: index('investedInIndex').on(investment.investedIn),
+    accountIdIdx: index('investment_accountId_idx').on(investment.accountId),
   })
 );
 
 export const investmentRelations = relations(investment, ({ one }) => ({
   user: one(users, { fields: [investment.investedBy], references: [users.id] }),
+  account: one(userAccounts, {
+    fields: [investment.accountId],
+    references: [userAccounts.id],
+  }),
   category: one(categories, {
     fields: [investment.investedIn],
     references: [categories.id],
