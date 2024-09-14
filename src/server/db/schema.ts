@@ -258,7 +258,7 @@ export const investment = createTable(
     accountId: integer('accountId')
       .notNull()
       .references(() => userAccounts.id),
-    investedIn: varchar('investedIn', { length: 255 })
+    investedIn: integer('investedIn')
       .notNull()
       .references(() => categories.id),
     investmentTime: timestamp('investmentTime', {

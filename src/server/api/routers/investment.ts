@@ -11,7 +11,7 @@ export const investmentRouter = createTRPCRouter({
         investedAmount: z
           .number()
           .min(50, 'Investment must be at least 50 rupees.'),
-        investedIn: z.string(),
+        investedIn: z.number(),
         accountId: z.number(),
       })
     )
@@ -64,7 +64,7 @@ export const investmentRouter = createTRPCRouter({
       z.object({
         id: z.number(),
         investedAmount: z.number().optional(),
-        investedIn: z.string().optional(),
+        investedIn: z.number().optional(),
         accountId: z.number().optional(),
         investmentWithdrawlTime: z.date().optional(),
       })
