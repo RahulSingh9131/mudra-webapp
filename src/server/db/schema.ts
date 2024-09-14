@@ -75,7 +75,7 @@ export const incomes = createTable(
       .notNull()
       .references(() => users.id),
     amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
-    accountId: varchar('accountId', { length: 255 })
+    accountId: integer('accountId')
       .notNull()
       .references(() => userAccounts.id),
     categoryId: integer('categoryId')
@@ -118,7 +118,7 @@ export const expenses = createTable(
     userId: varchar('userId', { length: 255 })
       .notNull()
       .references(() => users.id),
-    accountId: varchar('accountId', { length: 255 })
+    accountId: integer('accountId')
       .notNull()
       .references(() => userAccounts.id),
     amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
@@ -255,7 +255,7 @@ export const investment = createTable(
     investedBy: varchar('investedBy', { length: 255 })
       .notNull()
       .references(() => users.id),
-    accountId: varchar('accountId', { length: 255 })
+    accountId: integer('accountId')
       .notNull()
       .references(() => userAccounts.id),
     investedIn: varchar('investedIn', { length: 255 })

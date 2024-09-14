@@ -13,7 +13,7 @@ export const incomeRouter = createTRPCRouter({
       z.object({
         amount: z.number(),
         categoryId: z.number().optional(),
-        accountId: z.string(),
+        accountId: z.number(),
         description: z.string().optional(),
       })
     )
@@ -59,7 +59,7 @@ export const incomeRouter = createTRPCRouter({
         id: z.number(),
         amount: z.number(),
         categoryId: z.number().optional(),
-        accountId: z.string().optional(),
+        accountId: z.number().optional(),
         description: z.string().optional(),
         date: z.date().optional(),
       })

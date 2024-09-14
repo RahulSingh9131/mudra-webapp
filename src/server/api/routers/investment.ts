@@ -12,7 +12,7 @@ export const investmentRouter = createTRPCRouter({
           .number()
           .min(50, 'Investment must be at least 50 rupees.'),
         investedIn: z.string(),
-        accountId: z.string(),
+        accountId: z.number(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -65,7 +65,7 @@ export const investmentRouter = createTRPCRouter({
         id: z.number(),
         investedAmount: z.number().optional(),
         investedIn: z.string().optional(),
-        accountId: z.string().optional(),
+        accountId: z.number().optional(),
         investmentWithdrawlTime: z.date().optional(),
       })
     )
