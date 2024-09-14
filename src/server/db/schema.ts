@@ -135,7 +135,7 @@ export const expenses = createTable(
   },
   (expense) => ({
     userIdIdx: index('expense_userId_idx').on(expense.userId),
-    accountIdIdx: index('income_accountId_idx').on(expense.accountId),
+    accountIdIdx: index('expense_accountId_idx').on(expense.accountId),
     categoryIdIdx: index('expense_categoryId_idx').on(expense.categoryId),
     dateIdx: index('expense_date_idx').on(expense.date),
   })
