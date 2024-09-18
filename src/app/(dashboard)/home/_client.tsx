@@ -1,11 +1,27 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { signOut } from 'next-auth/react';
-import React from 'react';
+import { useGetAllUserAccounts } from '@/hooks/useUserAccounts';
 
-const LogoutButton = () => {
-  return <Button onClick={() => signOut()}>Logout</Button>;
+import { match, P } from 'ts-pattern';
+import EmptyPage from './_empty-page';
+
+const DashboardPage = () => {
+  const { data: userAccountsData } = useGetAllUserAccounts();
+
+  console.log(userAccountsData, 'userACcountsData');
+  return (
+    <div>
+      {match(userAccountsData)
+        .with(P.nullish, () => <EmptyPage />)
+        .with(
+          P.when((data) => Array.isArray(data) && data.length === 0),
+          () => <EmptyPage />
+        )
+        .otherwise(() => (
+          <div>User accounts available</div>
+        ))}
+    </div>
+  );
 };
 
-export default LogoutButton;
+export default DashboardPage;
