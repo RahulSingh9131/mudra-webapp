@@ -6,10 +6,12 @@ import { useTheme } from '../_context/ThemeContext';
 const ThemeButton = () => {
   const { theme, toggleTheme } = useTheme();
 
+  const buttonText = theme === 'dark' ? 'Light' : 'Dark';
+
   return (
     <div>
       <Button onClick={toggleTheme} className="capitalize">
-        {theme}
+        {buttonText}
       </Button>
     </div>
   );
