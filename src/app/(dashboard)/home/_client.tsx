@@ -8,7 +8,6 @@ import EmptyPage from './_empty-page';
 const DashboardPage = () => {
   const { data: userAccountsData } = useGetAllUserAccounts();
 
-  console.log(userAccountsData, 'userACcountsData');
   return (
     <div>
       {match(userAccountsData)

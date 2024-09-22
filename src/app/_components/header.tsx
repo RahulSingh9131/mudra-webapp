@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 
 import { getServerAuthSession } from '@/server/auth';
 import ThemeButton from './theme-button';
-import LogoutButton from '../(dashboard)/home/_client';
+import Logout from './logout-button';
 
 const Header = async () => {
   const session = await getServerAuthSession();
@@ -46,7 +46,7 @@ const Header = async () => {
             align="start"
           >
             <ThemeButton />
-            <LogoutButton />
+            <Logout />
             <Button>Go to Profile</Button>
           </DropdownMenuContent>
         </DropdownMenu>
