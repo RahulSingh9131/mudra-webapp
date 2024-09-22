@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -27,20 +28,28 @@ import {
 } from '@/components/ui/command';
 import { useState } from 'react';
 import { banks } from '@/lib/constants';
+import { useCreateUserAccount } from '@/hooks/useUserAccounts';
 
 type CreateAccountModalProps = {
   open: boolean;
   setIsOpen: (val: boolean) => void;
 };
 
+type userAccount = {
+  accountName: string;
+  balance: number;
+};
+
 const CreateAccountModal = ({ open, setIsOpen }: CreateAccountModalProps) => {
-  const [userAccount, setUserAccount] = useState({
+  const [userAccount, setUserAccount] = useState<userAccount>({
     accountName: '',
-    balance: '',
+    balance: 0,
   });
-  const [isCustomBank, setIsCustomBank] = useState(false);
-  const [openPopover, setOpenPopover] = useState(false);
-  const [selectedBank, setSelectedBank] = useState('');
+  const [isCustomBank, setIsCustomBank] = useState<boolean>(false);
+  const [openPopover, setOpenPopover] = useState<boolean>(false);
+  const [selectedBank, setSelectedBank] = useState<string>('');
+
+  const { mutate: createUserAccount, isPending } = useCreateUserAccount();
 
   const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -64,7 +73,15 @@ const CreateAccountModal = ({ open, setIsOpen }: CreateAccountModalProps) => {
   };
 
   const handleSubmit = () => {
-    console.log('submitted');
+    if (!userAccount.accountName || userAccount.balance === 0) {
+      return;
+    }
+
+    createUserAccount(userAccount, {
+      onSuccess: () => {
+        setIsOpen(false);
+      },
+    });
   };
 
   return (
@@ -152,7 +169,14 @@ const CreateAccountModal = ({ open, setIsOpen }: CreateAccountModalProps) => {
         </div>
         <DialogFooter>
           <Button type="submit" onClick={handleSubmit}>
-            Save changes
+            {isPending ? (
+              <div className="flex items-center space-x-2">
+                <RefreshCw className="animate-spin" />
+                <span>Saving...</span>
+              </div>
+            ) : (
+              'Save changes'
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
