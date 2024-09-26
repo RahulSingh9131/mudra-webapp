@@ -10,8 +10,6 @@ const DashboardPage = () => {
   const { data: userAccountsData, isLoading: isUserAccountLoading } =
     useGetAllUserAccounts();
 
-  console.log(userAccountsData, 'userAccountsData');
-
   const renderUserAccounts = () => {
     return match({ isUserAccountLoading })
       .with({ isUserAccountLoading: true }, () => {
