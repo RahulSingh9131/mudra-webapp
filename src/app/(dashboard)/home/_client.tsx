@@ -5,6 +5,7 @@ import { useGetAllUserAccounts } from '@/hooks/useUserAccounts';
 import { match, P } from 'ts-pattern';
 import EmptyPage from './_empty-page';
 import UserAccount from '@/app/_components/user-account';
+import UserAccountSkeleton from '@/skeletons/UserAccountSkeleton';
 
 const DashboardPage = () => {
   const { data: userAccountsData, isLoading: isUserAccountLoading } =
@@ -14,17 +15,17 @@ const DashboardPage = () => {
     return match({ isUserAccountLoading })
       .with({ isUserAccountLoading: true }, () => {
         return (
-          <div>
-            <p>Loading</p>
+          <div className="grid grid-cols-3 gap-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <UserAccountSkeleton key={i} />
+            ))}
           </div>
         );
       })
       .otherwise(() => (
-        <div>
+        <div className="grid grid-cols-3 gap-4">
           {(userAccountsData?.slice(0, 3) ?? []).map((item) => (
-            <div key={item.id}>
-              <UserAccount item={item} />
-            </div>
+            <UserAccount key={item.id} item={item} />
           ))}
         </div>
       ));

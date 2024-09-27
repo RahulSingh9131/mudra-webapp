@@ -19,7 +19,7 @@ type UserAccountProps = {
 
 const UserAccount = ({ item }: UserAccountProps) => {
   return (
-    <Card className="flex max-w-sm flex-col items-start p-0 shadow-md">
+    <Card className="flex w-full flex-col items-start p-0 shadow-md">
       <CardHeader>
         <CardTitle className="text-xl font-semibold">
           {item.accountName}
