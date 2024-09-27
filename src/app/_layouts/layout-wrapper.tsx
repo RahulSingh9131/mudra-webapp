@@ -8,6 +8,7 @@ import {
   House,
   ReceiptIndianRupee,
   Wallet,
+  Landmark,
 } from 'lucide-react';
 
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -17,6 +18,9 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
         <SidebarBody>
           <SidebarLink
             link={{ label: 'Dashboard', href: '/home', icon: <House /> }}
+          />
+          <SidebarLink
+            link={{ label: 'Accounts', href: '/account', icon: <Landmark /> }}
           />
           <SidebarLink
             link={{ label: 'Income', href: '/income', icon: <Wallet /> }}

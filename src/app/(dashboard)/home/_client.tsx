@@ -5,6 +5,9 @@ import { useGetAllUserAccounts } from '@/hooks/useUserAccounts';
 import { match, P } from 'ts-pattern';
 import EmptyPage from './_empty-page';
 import UserAccount from '@/app/_components/user-account';
+import UserAccountSkeleton from '@/skeletons/UserAccountSkeleton';
+import { MoveRight } from 'lucide-react';
+import Link from 'next/link';
 
 const DashboardPage = () => {
   const { data: userAccountsData, isLoading: isUserAccountLoading } =
@@ -14,17 +17,17 @@ const DashboardPage = () => {
     return match({ isUserAccountLoading })
       .with({ isUserAccountLoading: true }, () => {
         return (
-          <div>
-            <p>Loading</p>
+          <div className="grid grid-cols-3 gap-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <UserAccountSkeleton key={i} />
+            ))}
           </div>
         );
       })
       .otherwise(() => (
-        <div>
+        <div className="grid grid-cols-3 gap-4">
           {(userAccountsData?.slice(0, 3) ?? []).map((item) => (
-            <div key={item.id}>
-              <UserAccount item={item} />
-            </div>
+            <UserAccount key={item.id} item={item} />
           ))}
         </div>
       ));
@@ -43,6 +46,13 @@ const DashboardPage = () => {
             <h1 className="text-2xl font-bold text-foreground">
               Dashboard Overview
             </h1>
+            <Link
+              href="/account"
+              className="flex items-center justify-end space-x-2 hover:cursor-pointer"
+            >
+              <p className="text-base font-bold">See All</p>
+              <MoveRight className="h-6 w-6" />
+            </Link>
             <div className="mt-6">{renderUserAccounts()}</div>
           </div>
         ))}
