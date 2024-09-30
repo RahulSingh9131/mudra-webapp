@@ -35,10 +35,10 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { banks } from '@/lib/constants';
-import { useCreateUserAccount } from '@/hooks/useUserAccounts';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { api } from '@/trpc/react';
 
 type CreateAccountModalProps = {
   open: boolean;
@@ -62,7 +62,7 @@ const CreateAccountModal = ({ open, setIsOpen }: CreateAccountModalProps) => {
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const [selectedBank, setSelectedBank] = useState<string>('');
 
-  const { mutate: createUserAccount, isPending } = useCreateUserAccount();
+  const { mutate: createUserAccount, isPending } = api.userAccount.create.useMutation();
 
   const form = useForm<UserAccountFormValues>({
     resolver: zodResolver(userAccountSchema),

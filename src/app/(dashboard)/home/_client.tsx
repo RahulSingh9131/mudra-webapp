@@ -1,17 +1,16 @@
 'use client';
 
-import { useGetAllUserAccounts } from '@/hooks/useUserAccounts';
-
 import { match, P } from 'ts-pattern';
 import EmptyPage from './_empty-page';
 import UserAccount from '@/app/_components/user-account';
 import UserAccountSkeleton from '@/skeletons/UserAccountSkeleton';
 import { MoveRight } from 'lucide-react';
 import Link from 'next/link';
+import { api } from '@/trpc/react';
 
 const DashboardPage = () => {
   const { data: userAccountsData, isLoading: isUserAccountLoading } =
-    useGetAllUserAccounts();
+    api.userAccount.getAll.useQuery();
 
   const renderUserAccounts = () => {
     return match({ isUserAccountLoading })
