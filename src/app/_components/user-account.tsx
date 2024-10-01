@@ -9,9 +9,11 @@ import {
   CardDescription,
 } from '@/components/ui/card';
 
-type UserAccountType = inferProcedureOutput<
+type GetAllUserAccountsOutput = inferProcedureOutput<
   AppRouter['userAccount']['getAll']
->[number];
+>;
+
+type UserAccountType = GetAllUserAccountsOutput['accounts'][number];
 
 type UserAccountProps = {
   item: UserAccountType;

@@ -10,13 +10,17 @@ import { api } from '@/trpc/react';
 
 const AccountPage = () => {
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-
-  const { data: userAccountsData, isLoading: isUserAccountLoading } =
-  api.userAccount.getAll.useQuery();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    api.userAccount.getAll.useInfiniteQuery(
+      { pageSize: 9 },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    );
 
   const renderUserAccounts = () => {
-    return match({ isUserAccountLoading })
-      .with({ isUserAccountLoading: true }, () => {
+    return match({ isLoading })
+      .with({ isLoading: true }, () => {
         return (
           <div className="grid grid-cols-3 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
@@ -27,11 +31,19 @@ const AccountPage = () => {
       })
       .otherwise(() => (
         <div className="grid grid-cols-3 gap-4">
-          {userAccountsData?.map((item) => (
-            <UserAccount key={item.id} item={item} />
-          ))}
+          {data?.pages.flatMap((page) =>
+            page.accounts.map((item) => (
+              <UserAccount key={item.id} item={item} />
+            ))
+          )}
         </div>
       ));
+  };
+
+  const loadMore = async () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      await fetchNextPage();
+    }
   };
   return (
     <div>
@@ -50,6 +62,13 @@ const AccountPage = () => {
           open={isAccountModalOpen}
           setIsOpen={setIsAccountModalOpen}
         />
+      )}
+      {hasNextPage && (
+        <div className="mt-4 flex justify-center">
+          <Button onClick={loadMore} disabled={isFetchingNextPage}>
+            {isFetchingNextPage ? 'Loading more...' : 'Load More'}
+          </Button>
+        </div>
       )}
     </div>
   );
