@@ -2,17 +2,17 @@
 import { Button } from '@/components/ui/button';
 import { match } from 'ts-pattern';
 
-import { useGetAllUserAccounts } from '@/hooks/useUserAccounts';
 import CreateAccountModal from '@/modals/CreateAccountModal';
 import React, { useState } from 'react';
 import UserAccountSkeleton from '@/skeletons/UserAccountSkeleton';
 import UserAccount from '@/app/_components/user-account';
+import { api } from '@/trpc/react';
 
 const AccountPage = () => {
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
 
   const { data: userAccountsData, isLoading: isUserAccountLoading } =
-    useGetAllUserAccounts();
+  api.userAccount.getAll.useQuery();
 
   const renderUserAccounts = () => {
     return match({ isUserAccountLoading })
