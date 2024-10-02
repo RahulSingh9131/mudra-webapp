@@ -4,7 +4,7 @@ import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 
 import { userAccounts } from '@/server/db/schema';
 
-import { and, eq } from 'drizzle-orm';
+import { and, asc, desc, eq, gt } from 'drizzle-orm';
 
 export const userAccountsRouter = createTRPCRouter({
   // create a user bank account
@@ -24,13 +24,51 @@ export const userAccountsRouter = createTRPCRouter({
     }),
 
   // get all user accounts
-  getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.query.userAccounts.findMany({
-      where: (userAccounts, { eq }) =>
-        eq(userAccounts.userId, ctx.session.user.id),
-      orderBy: (userAccounts, { desc }) => [desc(userAccounts.createdAt)],
-    });
+  getAll: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.number().optional(),
+        pageSize: z.number().default(9),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor, pageSize } = input;
+
+      const accounts = await ctx.db
+        .select()
+        .from(userAccounts)
+        .where(
+          and(
+            eq(userAccounts.userId, ctx.session.user.id),
+            cursor ? gt(userAccounts.id, cursor) : undefined
+          )
+        )
+        .limit(pageSize + 1)
+        .orderBy(asc(userAccounts.id));
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (accounts.length > pageSize) {
+        const nextItem = accounts.pop();
+        nextCursor = nextItem!.id;
+      }
+
+      return {
+        accounts,
+        nextCursor,
+      };
+    }),
+
+  // get 3 latest userAccounts
+
+  getLatestThree: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db
+      .select()
+      .from(userAccounts)
+      .where(eq(userAccounts.userId, ctx.session.user.id))
+      .orderBy(desc(userAccounts.createdAt))
+      .limit(3);
   }),
+
   //   get user bank account by Id
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))

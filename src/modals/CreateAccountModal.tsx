@@ -62,7 +62,8 @@ const CreateAccountModal = ({ open, setIsOpen }: CreateAccountModalProps) => {
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const [selectedBank, setSelectedBank] = useState<string>('');
 
-  const { mutate: createUserAccount, isPending } = api.userAccount.create.useMutation();
+  const { mutate: createUserAccount, isPending } =
+    api.userAccount.create.useMutation();
 
   const form = useForm<UserAccountFormValues>({
     resolver: zodResolver(userAccountSchema),

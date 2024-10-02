@@ -10,7 +10,7 @@ import { api } from '@/trpc/react';
 
 const DashboardPage = () => {
   const { data: userAccountsData, isLoading: isUserAccountLoading } =
-    api.userAccount.getAll.useQuery();
+    api.userAccount.getLatestThree.useQuery();
 
   const renderUserAccounts = () => {
     return match({ isUserAccountLoading })
