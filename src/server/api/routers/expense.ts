@@ -4,7 +4,7 @@ import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 
 import { expenses } from '@/server/db/schema';
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq, gt, desc } from 'drizzle-orm';
 
 export const expenseRouter = createTRPCRouter({
   // Create a new expense
@@ -28,16 +28,35 @@ export const expenseRouter = createTRPCRouter({
     }),
 
   // Get all expenses
-  getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.query.expenses.findMany({
-      where: (expenses, { eq }) => eq(expenses.userId, ctx.session.user.id),
-      orderBy: (expenses, { desc }) => [desc(expenses.createdAt)],
-      with: {
-        account: true,
-        category: true,
-      },
-    });
-  }),
+  getAll: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.number().optional(),
+        pageSize: z.number().default(9),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor, pageSize } = input;
+
+      const paginatedExpense = await ctx.db
+        .select()
+        .from(expenses)
+        .where(
+          and(
+            eq(expenses.userId, ctx.session.user.id),
+            cursor ? gt(expenses.id, cursor) : undefined
+          )
+        )
+        .limit(pageSize + 1)
+        .orderBy(desc(expenses.createdAt));
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (paginatedExpense.length > pageSize) {
+        const nextItem = paginatedExpense.pop();
+        nextCursor = nextItem!.id;
+      }
+      return { paginatedExpense, nextCursor };
+    }),
 
   // Get an expense by ID
   getById: protectedProcedure

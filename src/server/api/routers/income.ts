@@ -4,7 +4,7 @@ import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 
 import { incomes } from '@/server/db/schema';
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq, gt, desc } from 'drizzle-orm';
 
 export const incomeRouter = createTRPCRouter({
   // Create a new income
@@ -28,16 +28,38 @@ export const incomeRouter = createTRPCRouter({
     }),
 
   // Get all incomes
-  getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.query.incomes.findMany({
-      where: (incomes, { eq }) => eq(incomes.userId, ctx.session.user.id),
-      orderBy: (incomes, { desc }) => [desc(incomes.createdAt)],
-      with: {
-        account: true,
-        category: true,
-      },
-    });
-  }),
+  getAll: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.number().optional(),
+        pageSize: z.number().default(9),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { pageSize, cursor } = input;
+
+      const paginatedIncome = await ctx.db
+        .select()
+        .from(incomes)
+        .where(
+          and(
+            eq(incomes.userId, ctx.session.user.id),
+            cursor ? gt(incomes.id, cursor) : undefined
+          )
+        )
+        .limit(pageSize + 1)
+        .orderBy(desc(incomes.createdAt));
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (paginatedIncome.length > pageSize) {
+        const nextItem = paginatedIncome.pop();
+        nextCursor = nextItem!.id;
+      }
+      return {
+        paginatedIncome,
+        nextCursor,
+      };
+    }),
 
   // Get a income by ID
   getById: protectedProcedure
