@@ -4,7 +4,7 @@ import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 
 import { userAccounts } from '@/server/db/schema';
 
-import { and, asc, desc, eq, gt } from 'drizzle-orm';
+import { and, desc, eq, gt } from 'drizzle-orm';
 
 export const userAccountsRouter = createTRPCRouter({
   // create a user bank account
@@ -44,7 +44,7 @@ export const userAccountsRouter = createTRPCRouter({
           )
         )
         .limit(pageSize + 1)
-        .orderBy(asc(userAccounts.id));
+        .orderBy(desc(userAccounts.createdAt));
 
       let nextCursor: typeof cursor | undefined = undefined;
       if (accounts.length > pageSize) {

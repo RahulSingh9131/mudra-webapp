@@ -4,7 +4,7 @@ import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 
 import { categories } from '@/server/db/schema';
 
-import { and, eq } from 'drizzle-orm';
+import { and, desc, eq, gt } from 'drizzle-orm';
 
 export const categoryRouter = createTRPCRouter({
   // Create a new category
@@ -18,13 +18,38 @@ export const categoryRouter = createTRPCRouter({
     }),
 
   // Get all categories
-  getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.query.categories.findMany({
-      where: (categories, { eq }) =>
-        eq(categories.createdById, ctx.session.user.id),
-      orderBy: (categories, { desc }) => [desc(categories.createdAt)],
-    });
-  }),
+  getAll: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.number().optional(),
+        pageSize: z.number().default(9),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { pageSize, cursor } = input;
+
+      const paginatedCategories = await ctx.db
+        .select()
+        .from(categories)
+        .where(
+          and(
+            eq(categories.createdById, ctx.session.user.id),
+            cursor ? gt(categories.id, cursor) : undefined
+          )
+        )
+        .limit(pageSize + 1)
+        .orderBy(desc(categories.createdAt));
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (paginatedCategories.length > pageSize) {
+        const nextItem = paginatedCategories.pop();
+        nextCursor = nextItem!.id;
+      }
+      return {
+        paginatedCategories,
+        nextCursor,
+      };
+    }),
 
   // Get a category by ID
   getById: protectedProcedure

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { investment } from '@/server/db/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, gt, desc } from 'drizzle-orm';
 
 export const investmentRouter = createTRPCRouter({
   // create an investment
@@ -27,17 +27,35 @@ export const investmentRouter = createTRPCRouter({
 
   // get all investment of a user
 
-  getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.query.investment.findMany({
-      where: (investment, { eq }) =>
-        eq(investment.investedBy, ctx.session.user.id),
-      orderBy: (investment, { desc }) => [desc(investment.investmentTime)],
-      with: {
-        category: true,
-        account: true,
-      },
-    });
-  }),
+  getAll: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.number().optional(),
+        pageSize: z.number().default(9),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { pageSize, cursor } = input;
+
+      const paginatedInvestment = await ctx.db
+        .select()
+        .from(investment)
+        .where(
+          and(
+            eq(investment.investedBy, ctx.session.user.id),
+            cursor ? gt(investment.id, cursor) : undefined
+          )
+        )
+        .limit(pageSize + 1)
+        .orderBy(desc(investment.investmentTime));
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (paginatedInvestment.length > pageSize) {
+        const nextItem = paginatedInvestment.pop();
+        nextCursor = nextItem!.id;
+      }
+      return { paginatedInvestment, nextCursor };
+    }),
 
   // get an investment by Id
 
